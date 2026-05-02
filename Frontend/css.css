@@ -1,0 +1,630 @@
+/* styles.css — SolarSystem UI */
+
+/* ---------- Reset & base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg-1: #050816;
+  --bg-2: #091224;
+  --bg-3: #0f1b33;
+
+  --surface: rgba(10, 15, 28, 0.58);
+  --surface-strong: rgba(14, 20, 38, 0.8);
+  --surface-soft: rgba(255, 255, 255, 0.04);
+
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  --text: #f4f7ff;
+  --muted: #b7c2d6;
+
+  --accent: #7cf7d4;
+  --accent-2: #9f7cff;
+  --accent-3: #d8ff6a;
+
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+
+  --blur: 18px;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.28);
+
+  --gap: 0.7rem;
+
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- Page ---------- */
+html,
+body {
+  height: 100%;
+}
+
+body.modal-open {
+  overflow: hidden;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background:
+    radial-gradient(1100px 700px at 12% 12%, rgba(124, 247, 212, 0.12), transparent 45%),
+    radial-gradient(900px 600px at 85% 18%, rgba(159, 124, 255, 0.12), transparent 42%),
+    radial-gradient(700px 500px at 50% 92%, rgba(216, 255, 106, 0.06), transparent 40%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ---------- Canvas ---------- */
+#canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+#canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0; /* penting */
+}
+
+/* ---------- Menu base ---------- */
+.menu {
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  gap: var(--gap);
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  backdrop-filter: blur(var(--blur)) saturate(135%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(135%);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  isolation: isolate;
+}
+
+/* subtle highlight edge */
+.menu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 30%, transparent 70%, rgba(255, 255, 255, 0.06));
+  opacity: 0.6;
+}
+
+/* ---------- Settings panel ---------- */
+.menu.settings {
+  right: 1rem;
+  bottom: 1rem;
+  min-width: 270px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.settings label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.settings label:hover {
+  color: #ffffff;
+}
+
+.settings label input {
+  cursor: pointer;
+}
+
+/* ---------- Custom checkbox ---------- */
+.settings input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.05);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.settings input[type="checkbox"]::after {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 5px;
+  transform: scale(0);
+  transition: transform 160ms ease;
+  background: linear-gradient(180deg, var(--accent), var(--accent-3));
+  box-shadow: 0 0 16px rgba(124, 247, 212, 0.45);
+}
+
+.settings input[type="checkbox"]:checked {
+  border-color: rgba(124, 247, 212, 0.8);
+  background: rgba(124, 247, 212, 0.12);
+  box-shadow: 0 0 0 3px rgba(124, 247, 212, 0.08);
+}
+
+.settings input[type="checkbox"]:checked::after {
+  transform: scale(1);
+}
+
+.settings input[type="checkbox"]:hover {
+  transform: translateY(-1px);
+}
+
+/* ---------- Select ---------- */
+.settings select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  color: var(--text);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  font-weight: 600;
+  outline: none;
+}
+
+.settings select:hover {
+  border-color: rgba(124, 247, 212, 0.45);
+}
+
+.settings select:focus {
+  border-color: rgba(124, 247, 212, 0.75);
+  box-shadow: 0 0 0 4px rgba(124, 247, 212, 0.12);
+}
+
+.settings select option {
+  background: #0b1326;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ---------- Button ---------- */
+.settings button {
+  border: 1px solid rgba(124, 247, 212, 0.22);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
+  color: #06131d;
+  background: linear-gradient(180deg, rgba(124, 247, 212, 0.95), rgba(159, 124, 255, 0.82));
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+  box-shadow: 0 12px 30px rgba(124, 247, 212, 0.12);
+}
+
+.settings button:hover {
+  transform: translateY(-2px);
+  filter: saturate(1.08) brightness(1.03);
+  box-shadow: 0 16px 40px rgba(124, 247, 212, 0.18);
+}
+
+.settings button:active {
+  transform: translateY(0);
+}
+
+/* ---------- Planet menu ---------- */
+.menu.planets {
+  left: 1rem;
+  top: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 170px;
+  gap: 0.45rem;
+}
+
+.planets span {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.58rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.planets span::before {
+  content: "";
+  inset: 0;
+  border-radius: inherit;
+  transform: translateX(-110%);
+  background: linear-gradient(90deg, transparent, rgba(124, 247, 212, 0.16), rgba(159, 124, 255, 0.18), transparent);
+  transition: transform 360ms ease;
+  position: relative;
+  z-index: 1;
+}
+
+.planets span:hover {
+  transform: translateX(7px);
+  color: #071019;
+  border-color: rgba(124, 247, 212, 0.55);
+  background: linear-gradient(90deg, rgba(124, 247, 212, 0.95), rgba(159, 124, 255, 0.78));
+  box-shadow: 0 12px 28px rgba(124, 247, 212, 0.14);
+}
+
+.planets span:hover::before {
+  transform: translateX(0%);
+}
+
+/* ---------- Focus ---------- */
+.menu :focus,
+.menu :focus-visible {
+  outline: 3px solid rgba(124, 247, 212, 0.28);
+  outline-offset: 3px;
+}
+
+/* ---------- Small helper ---------- */
+.menu .hint {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.64);
+  margin-left: 6px;
+}
+
+.planet-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(2, 6, 18, 0.56);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100; /* di depan semua */
+}
+.planet-overlay[hidden] {
+  display: none;
+}
+/* ... pastikan tidak ada definisi .planet-overlay lain di CSS ... */
+
+
+.planet-panel {
+  position: relative;
+  width: min(92vw, 560px);
+  max-height: min(84vh, 760px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(14, 20, 38, 0.96), rgba(8, 12, 24, 0.98));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  color: #fff;
+}
+
+.planet-panel__header {
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.planet-panel__header h2 {
+  font-size: 1.8rem;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.planet-subtitle {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.95rem;
+}
+
+.planet-panel__body {
+  padding: 1.1rem 1.25rem 1.35rem;
+  overflow-y: auto;
+  max-height: calc(min(84vh, 760px) - 86px);
+  color: rgba(245, 248, 255, 0.92);
+  line-height: 1.7;
+}
+
+.planet-panel__body h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.05rem;
+  color: #dfffe9;
+}
+
+.planet-panel__body ul {
+  margin: 0.5rem 0 0.5rem 1.2rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.planet-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.9rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.planet-close:hover {
+  transform: scale(1.06);
+  background: rgba(124, 247, 212, 0.18);
+}
+
+body.planet-lock {
+  overflow: hidden;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .menu {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .menu.settings {
+    right: 0.65rem;
+    bottom: 0.65rem;
+    min-width: 220px;
+  }
+
+  .menu.planets {
+    left: 0.65rem;
+    top: 0.65rem;
+    min-width: 150px;
+  }
+
+  .settings label {
+    font-size: 0.9rem;
+  }
+
+  .planets span {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .menu.settings {
+    left: 0.65rem;
+    right: 0.65rem;
+    bottom: 0.65rem;
+    min-width: auto;
+  }
+
+  .settings label {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .settings select,
+  .settings button {
+    width: 100%;
+  }
+}
+
+@media (max-height: 600px) {
+  .menu {
+    background: rgba(10, 15, 28, 0.72);
+  }
+}
+
+/* ---------- Motion preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ================= MODAL SYSTEM ================= */
+
+/* Overlay fullscreen + blur */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+}
+
+.modal.active {
+  display: flex;
+
+  /* INI KUNCI NYA */
+  display: flex;
+  justify-content: center;  /* tengah horizontal */
+  align-items: center;      /* tengah vertical */
+
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+
+  z-index: 9999;
+}
+
+/* Box modal */
+.modal-content {
+  position: relative;
+  width: min(90%, 420px);
+  padding: 1.4rem;
+
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+
+  background: linear-gradient(
+    180deg,
+    rgba(14, 20, 38, 0.95),
+    rgba(8, 12, 24, 0.98)
+  );
+
+  color: #fff;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+}
+
+/* tombol close */
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #aaa;
+  transition: 0.2s;
+}
+
+.modal-content .close:hover {
+  color: #7cf7d4;
+  transform: scale(1.2);
+}
+
+/* ================= FORM STYLE ================= */
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.modal-content input,
+.modal-content textarea {
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  outline: none;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+  border-color: #7cf7d4;
+}
+
+/* button */
+.modal-content button {
+  margin-top: 0.8rem;
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+
+  background: linear-gradient(90deg, #7cf7d4, #9f7cff);
+  color: #06131d;
+
+  transition: 0.2s;
+}
+
+.modal-content button:hover {
+  transform: translateY(-2px);
+}
+
+/* ================= PROFILE STYLE ================= */
+
+.profile-box p {
+  margin: 0.4rem 0;
+  color: rgba(255,255,255,0.85);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 420px) {
+  .modal-content {
+    width: 92%;
+    padding: 1rem;
+  }
+}
+
+.auth-menu {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 0.5rem;
+
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+
+  background: rgba(10, 15, 28, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.12);
+
+  z-index: 200;
+}
+
+.auth-menu button {
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth-menu button:hover {
+  background: linear-gradient(90deg, #7cf7d4, #9f7cff);
+  color: #06131d;
+}
+
+.modal-content {
+  position: relative;
+
+  /* 🔥 TAMBAH INI */
+  margin: auto;
+}
+
+body {
+  font-family: var(--font-sans);
+}

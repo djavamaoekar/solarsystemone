@@ -1,0 +1,18 @@
+{
+  "name": "solarsystemprime",
+  "version": "1.0.0",
+  "description": "Solar System backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No tests yet\""
+  },
+  "keywords": ["solar-system", "backend", "node"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}

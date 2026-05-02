@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SolarSystem</title>
+
+    <link rel="icon" href="./favicon.png" />
+    <link rel="stylesheet" href="css.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script type="module" src="./javascript.js"></script>
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+
+      :root {
+        color-scheme: dark;
+        color: white;
+      }
+
+      body {
+        overflow: hidden;
+      }
+
+      .modal {
+        overflow-y: auto;
+      }
+
+      #canvas {
+        position: fixed;
+        inset: 0;
+        cursor: crosshair;
+        display: block;
+      }
+
+      .menu {
+        position: absolute;
+        backdrop-filter: blur(16px);
+        outline: 2px solid white;
+        z-index: 1;
+      }
+
+      .settings {
+        right: 0;
+        bottom: 0;
+        padding: 0.75rem;
+        border-radius: 0.5em 0 0 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
+      }
+
+      .settings label,
+      .settings label input {
+        cursor: pointer;
+      }
+
+      .settings label {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .settings input[type='checkbox'] {
+        width: 1.5rem;
+        aspect-ratio: 1;
+      }
+
+      .settings select {
+        height: 1.5rem;
+        font-weight: bold;
+      }
+
+      .settings select option {
+        font-weight: bold;
+      }
+
+      .settings button {
+        height: 1.8rem;
+        padding: 0 0.75rem;
+        cursor: pointer;
+      }
+
+      .planets {
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        border-radius: 0 0 0.5em 0;
+      }
+
+      .planets span {
+        cursor: help;
+        padding: 3px 8px 3px 4px;
+        transition: color 100ms;
+        position: relative;
+      }
+
+      .planets span:hover {
+        color: black;
+        font-weight: bold;
+      }
+
+      .planets span::before {
+        content: '';
+        position: absolute;
+        height: 100%;
+        width: 0%;
+        top: 0;
+        left: 0;
+        transition: 200ms;
+        z-index: -1;
+      }
+
+      .planets span:hover::before {
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <aside class="menu settings" aria-label="Settings">
+        <label>
+          Settingan
+        </label>
+        <label>
+          Animasi:
+          <input type="checkbox" checked data-animate />
+        </label>
+
+        <label>
+          Cahaya ambiens:
+          <input type="checkbox" checked data-ambient-light />
+        </label>
+
+        <label>
+          Cahaya pusat:
+          <input type="checkbox" checked data-point-light />
+        </label>
+
+        <label>
+          Papan jaring:
+          <input type="checkbox" data-grid-plane />
+        </label>
+
+        <label>
+          Rotasi otomatis:
+          <input type="checkbox" data-auto-rotate />
+        </label>
+
+        <label>
+          Kemulusan kamera:
+          <input type="checkbox" checked data-camera-damping />
+        </label>
+
+        <label for="skybox-select">
+          Latar belakang:
+        </label>
+        <select id="skybox-select" data-skybox>
+          <option value="blue">Biru</option>
+          <option value="simple">Sederhana</option>
+          <option value="nebula" selected>Awan langit</option>
+          <option value="red">Merah</option>
+          <option value="none">Normal</option>
+        </select>
+
+        <button type="button" data-camera-reset>Reset Kamera</button>
+      </aside>
+
+      <nav class="menu planets" aria-label="Planets">
+        <label>
+          Pilih planet dibawah:
+        </label>
+        <span data-mercury>Merkurius</span>
+        <span data-venus>Venus</span>
+        <span data-earth>Bumi</span>
+        <span data-moon>Bulan</span>
+        <span data-mars>Mars</span>
+        <span data-jupiter>Jupiter</span>
+        <span data-saturn>Saturnus</span>
+        <span data-uranus>Uranus</span>
+        <span data-neptune>Neptunus</span>
+      </nav>
+
+        <!-- SIGN UP MODAL -->
+    <div id="signupModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Daftar</h2>
+
+        <form id="signupForm">
+          <label>Nama</label>
+          <input type="text" name="nama" required />
+
+          <label>Password</label>
+          <input type="password" name="password" required />
+
+          <button type="submit">Daftar</button>
+        </form>
+
+      </div>
+    </div>
+
+        <!-- LOGIN MODAL -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <h2>Masuk</h2>
+
+        <form id="loginForm">
+          <label>Username</label>
+          <input type="text" name="username" required />
+
+          <label>Password</label>
+          <input type="password" name="password" required />
+
+          <button type="submit">Masuk</button>
+        </form>
+
+      </div>
+    </div>
+
+        <!-- PROFILE MODAL -->
+    <div id="profileModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <h2>Profil Pengguna</h2>
+
+        <div>
+          <p><b>Nama:</b> <span id="profileNama">-</span></p>
+          <p><b>Domisili:</b> <span id="profileDomisili">-</span></p>
+          <p><b>Bio:</b> <span id="profileBio">-</span></p>
+
+          <button id="editProfileBtn">Edit Profil</button>
+
+          <!-- 🔥 FORM EDIT -->
+          <div id="editForm" hidden>
+            <input type="text" id="editNama" placeholder="Nama baru" />
+            <input type="text" id="editDomisili" placeholder="Domisili" />
+            <textarea id="editBio" placeholder="Bio"></textarea>
+
+            <button type="button" id="saveProfile">Simpan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+        <!-- COMMENT MODAL -->
+    <div id="commentModal" class="modal">
+      <div class="modal-content">
+        <h2>Komentar</h2>
+
+        <form id="commentForm">
+          <fieldset>
+            <legend>Penilaian:</legend>
+
+            <label><input type="radio" name="rating" value="1"> 1</label>
+            <label><input type="radio" name="rating" value="2"> 2</label>
+            <label><input type="radio" name="rating" value="3"> 3</label>
+            <label><input type="radio" name="rating" value="4"> 4</label>
+            <label><input type="radio" name="rating" value="5"> 5</label>
+          </fieldset>
+
+          <label>Judul</label>
+          <input type="text" name="judul" required />
+
+          <label>Komentar</label>
+          <textarea name="komentar" rows="4" required></textarea>
+
+          <button type="submit">Kirim Komentar</button>
+        </form>
+
+      </div>
+    </div>
+
+        <!-- REVIEW MODAL -->
+    <div id="reviewModal" class="modal">
+      <div class="modal-content">
+        <h2>Ulasan Pengguna</h2>
+
+      </div>
+    </div>
+
+    <div class="menu auth-menu">
+      <button data-modal-target="signupModal">Daftar</button>
+      <button data-modal-target="loginModal">Masuk</button>
+      <button data-modal-target="profileModal">Profil</button>
+      <button data-modal-target="commentModal">Komentar</button>
+      <button data-modal-target="reviewModal">Ulasan</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="planet-overlay" data-planet-overlay hidden>
+      <div class="planet-panel">
+        <button class="planet-close" data-planet-close>×</button>
+
+        <div class="planet-panel__header">
+          <h2 data-planet-title>Planet</h2>
+          <p class="planet-subtitle" data-planet-subtitle></p>
+        </div>
+
+        <div class="planet-panel__body" data-planet-content>
+          <!-- isi planet -->
+        </div>
+      </div>
+    </div>
+
+      <canvas id="canvas"></canvas>
+    </main>
+  </body>
+</html>
