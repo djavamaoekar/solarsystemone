@@ -866,7 +866,7 @@ document.getElementById("signupForm").addEventListener("submit", (e) => {
 
   const formData = new FormData(e.target);
 
-  fetch("http://localhost:5000/signup", {
+  fetch("https://solarsystemprime-production.up.railway.app/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -887,7 +887,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
 
   const formData = new FormData(e.target);
 
-  fetch("http://localhost:5000/login", {
+  fetch("https://solarsystemprime-production.up.railway.app/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -924,7 +924,7 @@ document.getElementById("commentForm").addEventListener("submit", async (e) => {
   const judul = e.target.judul.value;
   const komentar = e.target.komentar.value;
 
-  const res = await fetch("http://localhost:5000/comment", {
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/comment", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -955,7 +955,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
 
   const formData = new FormData(e.target);
 
-  const res = await fetch("http://localhost:5000/signup", {
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -975,7 +975,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
   const formData = new FormData(e.target);
 
-  const res = await fetch("http://localhost:5000/login", {
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -1006,7 +1006,7 @@ document.getElementById("commentForm").addEventListener("submit", async (e) => {
   const judul = e.target.judul.value;
   const komentar = e.target.komentar.value;
 
-  const res = await fetch("http://localhost:5000/comment", {
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/comment", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -1026,7 +1026,7 @@ document.getElementById("commentForm").addEventListener("submit", async (e) => {
 
 // ================= 🔥 TAMPILKAN REVIEW =================
 async function loadReviews() {
-  const res = await fetch("http://localhost:5000/reviews");
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
   const data = await res.json();
 
   const container = document.querySelector("#reviewModal .modal-content");

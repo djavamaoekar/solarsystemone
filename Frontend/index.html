@@ -228,32 +228,28 @@
       </div>
     </div>
 
-        <!-- PROFILE MODAL -->
-    <div id="profileModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Profil Pengguna</h2>
 
-        <h2>Profil Pengguna</h2>
+    <div class="profile-details">
+      <p><b>Nama:</b> <span id="profileNama">-</span></p>
+      <p><b>Domisili:</b> <span id="profileDomisili">-</span></p>
+      <p><b>Bio:</b> <span id="profileBio">-</span></p>
+      
+      <button id="editProfileBtn">Edit Profil</button>
 
-        <div>
-          <p><b>Nama:</b> <span id="profileNama">-</span></p>
-          <p><b>Domisili:</b> <span id="profileDomisili">-</span></p>
-          <p><b>Bio:</b> <span id="profileBio">-</span></p>
-
-          <button id="editProfileBtn">Edit Profil</button>
-
-          <!-- 🔥 FORM EDIT -->
-          <div id="editForm" hidden>
-            <input type="text" id="editNama" placeholder="Nama baru" />
-            <input type="text" id="editDomisili" placeholder="Domisili" />
-            <textarea id="editBio" placeholder="Bio"></textarea>
-
-            <button type="button" id="saveProfile">Simpan</button>
-          </div>
-        </div>
-
+      <!-- 🔥 FORM EDIT -->
+      <div id="editForm" hidden>
+        <input type="text" id="editNama" placeholder="Nama baru" />
+        <input type="text" id="editDomisili" placeholder="Domisili" />
+        <textarea id="editBio" placeholder="Bio"></textarea>
+        <button type="button" id="saveProfile">Simpan</button>
       </div>
     </div>
+  </div>
+</div>
 
         <!-- COMMENT MODAL -->
     <div id="commentModal" class="modal">
@@ -294,7 +290,6 @@
     <div class="menu auth-menu">
       <button data-modal-target="signupModal">Daftar</button>
       <button data-modal-target="loginModal">Masuk</button>
-      <button data-modal-target="profileModal">Profil</button>
       <button data-modal-target="commentModal">Komentar</button>
       <button data-modal-target="reviewModal">Ulasan</button>
       <button id="logoutBtn">Logout</button>
