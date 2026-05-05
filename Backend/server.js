@@ -8,6 +8,7 @@ const app = express();
 app.use(cors({
   origin: "*"
 }));
+
 app.use(express.json());
 
 // ===== DATABASE SEMENTARA =====
