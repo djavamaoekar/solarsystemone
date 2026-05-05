@@ -6,13 +6,8 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({
-  origin: [
-    "https://solarsystemprime.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT"],
-  credentials: true
+  origin: "*"
 }));
-
 app.use(express.json());
 
 // ===== DATABASE SEMENTARA =====
