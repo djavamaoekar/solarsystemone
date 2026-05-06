@@ -397,20 +397,21 @@ body.planet-lock {
   .menu {
     padding: 8px;
     border-radius: 14px;
-    transform: scale(0.67);
   }
 
   .menu.settings {
     right: 0.3rem;
     bottom: 0.3rem;
     width: 180px;
+    transform: scale(0.67);
     transform-origin: bottom right;
   }
 
   .menu.planets {
     left: 0.3rem;
-    top: 8.5rem;
+    top: 9rem;
     width: 180px;
+    transform: scale(0.67);
     transform-origin: top left;
   }
 
@@ -422,6 +423,10 @@ body.planet-lock {
     padding: 0.35rem 0.5rem;
     font-size: 0.72rem;
   }
+
+  .auth-menu {
+    top: calc(env(safe-area-inset-top) + 0.8rem);
+  }
 }
 
 @media (max-width: 420px) {
@@ -431,6 +436,7 @@ body.planet-lock {
 
   .menu.planets {
     width: 170px;
+    top: 10rem;
   }
 }
 
