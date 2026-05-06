@@ -395,54 +395,42 @@ body.planet-lock {
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
   .menu {
-    padding: 12px;
-    border-radius: 18px;
+    padding: 8px;
+    border-radius: 14px;
+    transform: scale(0.67);
   }
 
   .menu.settings {
-    right: 0.65rem;
-    bottom: 0.65rem;
-    min-width: 220px;
+    right: 0.3rem;
+    bottom: 0.3rem;
+    width: 180px;
+    transform-origin: bottom right;
   }
 
   .menu.planets {
-    left: 0.65rem;
-    top: 0.65rem;
-    min-width: 150px;
+    left: 0.3rem;
+    top: 0.3rem;
+    width: 180px;
+    transform-origin: top left;
   }
 
   .settings label {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
   }
 
   .planets span {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.92rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.72rem;
   }
 }
 
 @media (max-width: 420px) {
   .menu.settings {
-    left: 0.65rem;
-    right: 0.65rem;
-    bottom: 0.65rem;
-    min-width: auto;
+    width: 170px;
   }
 
-  .settings label {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  .settings select,
-  .settings button {
-    width: 100%;
-  }
-}
-
-@media (max-height: 600px) {
-  .menu {
-    background: rgba(10, 15, 28, 0.72);
+  .menu.planets {
+    width: 170px;
   }
 }
 
@@ -627,4 +615,19 @@ body.planet-lock {
 
 body {
   font-family: var(--font-sans);
+}
+
+@media screen and (max-width: 768px) {
+  #planetMenu,
+  #settingsMenu {
+    transform: scale(0.1);
+  }
+
+  #planetMenu {
+    transform-origin: top left;
+  }
+
+  #settingsMenu {
+    transform-origin: top right;
+  }
 }
