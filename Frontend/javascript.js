@@ -1008,14 +1008,24 @@ async function loadReviews() {
 }
 
 // buka modal review = load data
+console.log("LOGOUT SCRIPT MASUK");
+
 document.querySelector('[data-modal-target="reviewModal"]').addEventListener("click", loadReviews);
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
+window.addEventListener("DOMContentLoaded", () => {
 
-  localStorage.removeItem("user");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-  alert("Logout berhasil");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
 
-  location.reload();
+      localStorage.removeItem("user");
+
+      alert("Logout berhasil");
+
+      location.reload();
+
+    });
+  }
 
 });
