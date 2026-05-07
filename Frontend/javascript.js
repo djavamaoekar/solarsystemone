@@ -1009,3 +1009,13 @@ async function loadReviews() {
 
 // buka modal review = load data
 document.querySelector('[data-modal-target="reviewModal"]').addEventListener("click", loadReviews);
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+  localStorage.removeItem("user");
+
+  alert("Logout berhasil");
+
+  location.reload();
+
+});
