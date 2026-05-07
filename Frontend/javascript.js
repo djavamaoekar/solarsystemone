@@ -908,40 +908,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
     });
 });
 
-// 🔥 TAMBAH INI
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  localStorage.removeItem("user");
-  location.reload();
-});
-
-document.getElementById("commentForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const rating = document.querySelector('input[name="rating"]:checked')?.value;
-  const judul = e.target.judul.value;
-  const komentar = e.target.komentar.value;
-
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/comment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nama: user.nama,
-      rating,
-      judul,
-      komentar
-    })
-  });
-
-  const data = await res.json();
-  console.log(data);
-
-  alert("Komentar terkirim 🔥");
-  e.target.reset();
-});
-
 // ================= USER =================
 
 if (user) {
