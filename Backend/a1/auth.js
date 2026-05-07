@@ -32,12 +32,12 @@ router.post('/signup', (req, res) => {
 
 // LOGIN
 router.post('/login', (req, res) => {
-  const { username, password } = req.body;
+  const { nama, password } = req.body;
 
   const users = readUsers();
 
   const user = users.find(
-    u => u.nama === username && u.password === password
+    u => u.nama === nama && u.password === password
   );
 
   if (!user) {

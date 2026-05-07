@@ -850,62 +850,80 @@ function animate() {
 
 animate();
 
+console.log("FORM KEKIRIM");
+
+// ================= USER =================
+
 const user = JSON.parse(localStorage.getItem("user"));
 
 if (user) {
-  document.querySelector("#profileModal p:nth-child(2)").innerHTML =
-    "<b>Nama:</b> " + user.nama;
+  document.getElementById("profileNama").textContent = user.nama;
+  console.log("User login:", user.nama);
 }
 
-if (user) {
-  console.log("User sudah login:", user.nama);
-}
+// ================= SIGNUP =================
 
-document.getElementById("signupForm").addEventListener("submit", (e) => {
+document.getElementById("signupForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
 
-  fetch("https://solarsystemprime-production.up.railway.app/signup", {
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/signup", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       nama: formData.get("nama"),
-      password: formData.get("password"),
-    }),
-  })
-    .then(res => res.json())
-    .then(data => console.log(data));
+      password: formData.get("password")
+    })
+  });
+
+  const data = await res.json();
+
+  console.log(data);
+  alert(data.message);
+
+  e.target.reset();
 });
 
-console.log("FORM KEKIRIM");
+// ================= LOGIN =================
 
-document.getElementById("loginForm").addEventListener("submit", (e) => {
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
 
-  fetch("https://solarsystemprime-production.up.railway.app/login", {
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/login", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      username: formData.get("username"),
-      password: formData.get("password"),
-    }),
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
+      nama: formData.get("nama"),
+      password: formData.get("password")
+    })
+  });
 
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        alert("Login berhasil");
-      }
-    });
+  const data = await res.json();
+
+  console.log(data);
+
+  // LOGIN BERHASIL
+  if (data.user) {
+
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    alert("Login berhasil");
+
+    location.reload();
+
+  } else {
+
+    // LOGIN GAGAL
+    alert(data.message || "User tidak ditemukan");
+
+  }
 });
 
 // ================= USER =================
@@ -933,32 +951,6 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   const data = await res.json();
   console.log(data);
   alert(data.message);
-});
-
-// ================= LOGIN =================
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: formData.get("username"),
-      password: formData.get("password"),
-    }),
-  });
-
-  const data = await res.json();
-  console.log(data);
-
-  if (data.user) {
-    alert("Login berhasil");
-    location.reload();
-  } else {
-    alert(data.message);
-  }
 });
 
 // ================= COMMENT =================

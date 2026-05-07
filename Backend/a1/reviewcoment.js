@@ -14,12 +14,12 @@ function save(data) {
 
 // POST review
 router.post('/', (req, res) => {
-  const { username, rating, judul, komentar } = req.body;
+  const { nama, rating, judul, komentar } = req.body;
 
   const data = read();
 
   data.push({
-    username,
+    nama,
     rating,
     judul,
     komentar,

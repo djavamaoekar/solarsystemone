@@ -35,9 +35,9 @@ app.post("/signup", (req, res) => {
 
 // ===== LOGIN =====
 app.post("/login", (req, res) => {
-  const { username, password } = req.body;
+  const { nama, password } = req.body;
 
-  const user = users.find((u) => u.nama === username);
+  const user = users.find((u) => u.nama === nama);
 
   if (!user) {
     return res.status(404).json({ message: "User tidak ditemukan" });
