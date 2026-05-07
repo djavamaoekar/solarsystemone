@@ -995,21 +995,19 @@ async function loadReviews() {
   const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
   const data = await res.json();
 
-  const container = document.querySelector("#reviewModal .modal-content");
+  const container = document.getElementById("reviewList");
 
-  container.innerHTML = `
-    <h2>Ulasan Pengguna</h2>
-  `;
+  container.innerHTML = "";
 
   if (data.length === 0) {
-    container.innerHTML += "<p>Belum ada review</p>";
+    container.innerHTML = "<p>Belum ada review</p>";
     return;
   }
 
   data.reverse().forEach(r => {
     container.innerHTML += `
       <div style="margin-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:0.5rem;">
-        <b>${r.nama}</b> ⭐ ${"⭐".repeat(r.rating)}<br>
+        <b>${r.nama}</b> nilai ${"⭐".repeat(r.rating)}<br>
         <b>${r.judul}</b>
         <p>${r.komentar}</p>
       </div>
