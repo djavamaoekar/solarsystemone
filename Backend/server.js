@@ -25,11 +25,17 @@ app.post("/signup", (req, res) => {
   const { nama, password } = req.body;
 
   const existingUser = users.find((u) => u.nama === nama);
+
   if (existingUser) {
     return res.status(400).json({ message: "User sudah ada" });
   }
 
-  users.push({ nama, password });
+  users.push({
+    id: Date.now(),
+    nama,
+    password
+  });
+
   res.json({ message: "Signup berhasil" });
 });
 
@@ -74,13 +80,14 @@ app.put("/profile", (req, res) => {
 
 // ===== TAMBAH KOMENTAR (JADI REVIEW) =====
 app.post("/comment", (req, res) => {
-  const { nama, rating, judul, komentar } = req.body;
+  const { userId, nama, rating, judul, komentar } = req.body;
 
   if (!nama || !rating || !judul || !komentar) {
     return res.status(400).json({ message: "Data tidak lengkap" });
   }
 
   const newReview = {
+    id: Date.now(),
     nama,
     rating,
     judul,
@@ -96,6 +103,45 @@ app.post("/comment", (req, res) => {
 // ===== AMBIL SEMUA REVIEW =====
 app.get("/reviews", (req, res) => {
   res.json(reviews);
+});
+
+app.get("/users", (req, res) => {
+  res.json(users);
+});
+
+app.delete("/comment/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const index = reviews.findIndex(r => r.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: "Komentar tidak ditemukan" });
+  }
+
+  reviews.splice(index, 1);
+
+  res.json({ message: "Komentar dihapus" });
+});
+
+app.put("/comment/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const { rating, judul, komentar } = req.body;
+
+  const review = reviews.find(r => r.id === id);
+
+  if (!review) {
+    return res.status(404).json({ message: "Komentar tidak ditemukan" });
+  }
+
+  review.rating = rating;
+  review.judul = judul;
+  review.komentar = komentar;
+  review.edited = true;
+
+  res.json({
+    message: "Komentar diupdate",
+    review
+  });
 });
 
 // ===== START SERVER =====

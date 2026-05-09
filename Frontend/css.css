@@ -646,3 +646,73 @@ body {
   right: 14px;
   z-index: 10000;
 }
+
+.hamburger-auth {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#authToggle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#authToggle:hover {
+  transform: scale(1.08);
+  background: rgba(255,255,255,0.15);
+}
+
+.auth-dropdown {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 9px;
+  min-width: 110px;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+}
+
+.auth-dropdown.show {
+  display: flex;
+}
+    
+.auth-dropdown button {
+  padding: 7px;
+  border: none;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.07);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 12px;
+}
+
+.auth-dropdown button:hover {
+  background: rgba(126,166,137,0.45);
+  transform: translateX(4px);
+}
+
+.auth-menu {
+  display: none !important;
+}

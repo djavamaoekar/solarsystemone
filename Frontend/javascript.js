@@ -7,6 +7,15 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+const authToggle = document.getElementById("authToggle");
+const authDropdown = document.getElementById("authDropdown");
+
+if (authToggle && authDropdown) {
+  authToggle.addEventListener("click", () => {
+    authDropdown.classList.toggle("show");
+  });
+}
+
 // scene, camera
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);
@@ -27,6 +36,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Fungsi membuka modal
 function openModal(id) {
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.classList.remove('active');
+  });
+
   const modal = document.getElementById(id);
   if (modal) modal.classList.add('active');
 }
@@ -850,182 +863,199 @@ function animate() {
 
 animate();
 
-console.log("FORM KEKIRIM");
-
-// ================= USER =================
-
-const user = JSON.parse(localStorage.getItem("user"));
-
-if (user) {
-  document.getElementById("profileNama").textContent = user.nama;
-  console.log("User login:", user.nama);
-}
-
-// ================= SIGNUP =================
-
-document.getElementById("signupForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      nama: formData.get("nama"),
-      password: formData.get("password")
-    })
-  });
-
-  const data = await res.json();
-
-  console.log(data);
-  alert(data.message);
-
-  e.target.reset();
-});
-
-// ================= LOGIN =================
-
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      nama: formData.get("nama"),
-      password: formData.get("password")
-    })
-  });
-
-  const data = await res.json();
-
-  console.log(data);
-
-  // LOGIN BERHASIL
-  if (data.user) {
-
-    localStorage.setItem("user", JSON.stringify(data.user));
-
-    alert("Login berhasil");
-
-    location.reload();
-
-  } else {
-
-    // LOGIN GAGAL
-    alert(data.message || "User tidak ditemukan");
-
-  }
-});
-
-// ================= USER =================
-
-if (user) {
-  document.getElementById("profileNama").textContent = user.nama;
-  console.log("User login:", user.nama);
-}
-
-// ================= SIGNUP =================
-document.getElementById("signupForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/signup", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nama: formData.get("nama"),
-      password: formData.get("password"),
-    }),
-  });
-
-  const data = await res.json();
-  console.log(data);
-  alert(data.message);
-});
-
-// ================= COMMENT =================
-document.getElementById("commentForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (!user) return alert("Login dulu!");
-
-  const rating = document.querySelector('input[name="rating"]:checked')?.value;
-  const judul = e.target.judul.value;
-  const komentar = e.target.komentar.value;
-
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/comment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nama: user.nama,
-      rating,
-      judul,
-      komentar
-    })
-  });
-
-  const data = await res.json();
-  console.log(data);
-
-  alert("Komentar terkirim 🔥");
-  e.target.reset();
-});
-
-// ================= 🔥 TAMPILKAN REVIEW =================
-async function loadReviews() {
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
-  const data = await res.json();
-
-  const container = document.getElementById("reviewList");
-
-  container.innerHTML = "";
-
-  if (data.length === 0) {
-    container.innerHTML = "<p>Belum ada review</p>";
-    return;
-  }
-
-  data.reverse().forEach(r => {
-    container.innerHTML += `
-      <div style="margin-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:0.5rem;">
-        <b>${r.nama}</b> nilai ${"⭐".repeat(r.rating)}<br>
-        <b>${r.judul}</b>
-        <p>${r.komentar}</p>
-      </div>
-    `;
-  });
-}
-
-// buka modal review = load data
-console.log("LOGOUT SCRIPT MASUK");
-
-document.querySelector('[data-modal-target="reviewModal"]').addEventListener("click", loadReviews);
-
 window.addEventListener("DOMContentLoaded", () => {
+  // ================= USER =================
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const logoutBtn = document.getElementById("logoutBtn");
+  if (user && document.getElementById("profileNama")) {
+    document.getElementById("profileNama").textContent = user.nama;
+    console.log("User login:", user.nama);
+  }
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
+  // ================= SIGNUP =================
+  const signupForm = document.getElementById("signupForm");
+  if (signupForm) {
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      localStorage.removeItem("user");
+      const formData = new FormData(e.target);
 
-      alert("Logout berhasil");
+      const res = await fetch("https://solarsystemprime-production.up.railway.app/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nama: formData.get("nama"),
+          password: formData.get("password")
+        })
+      });
 
-      location.reload();
+      const data = await res.json();
+      console.log(data);
+      alert(data.message);
 
+      e.target.reset();
     });
   }
 
+  // ================= LOGIN =================
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+
+      const res = await fetch("https://solarsystemprime-production.up.railway.app/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nama: formData.get("nama"),
+          password: formData.get("password")
+        })
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        alert("Login berhasil");
+        location.reload();
+      } else {
+        alert(data.message || "User tidak ditemukan");
+      }
+    });
+  }
+
+  // ================= COMMENT =================
+  let editingCommentId = null;
+
+  const commentForm = document.getElementById("commentForm");
+  if (commentForm) {
+    commentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const currentUser = JSON.parse(localStorage.getItem("user"));
+      if (!currentUser) return alert("Login dulu!");
+
+      const rating = document.querySelector('input[name="rating"]:checked')?.value;
+      const judul = e.target.judul.value;
+      const komentar = e.target.komentar.value;
+
+      if (!rating) return alert("Pilih rating dulu!");
+
+      const url = editingCommentId
+        ? `https://solarsystemprime-production.up.railway.app/comment/${editingCommentId}`
+        : "https://solarsystemprime-production.up.railway.app/comment";
+
+      const method = editingCommentId ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nama: currentUser.nama,
+          rating,
+          judul,
+          komentar
+        })
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      alert(editingCommentId ? "Komentar diupdate 🔥" : "Komentar terkirim 🔥");
+
+      editingCommentId = null;
+      e.target.reset();
+      closeModal("commentModal");
+      loadReviews();
+    });
+  }
+
+  // ================= REVIEW =================
+  async function loadReviews() {
+    const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
+    const data = await res.json();
+
+    const container = document.getElementById("reviewList");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!data.length) {
+      container.innerHTML = "<p>Belum ada review</p>";
+      return;
+    }
+
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+
+    [...data].reverse().forEach((r) => {
+      console.log(r);
+  const isOwner = currentUser && currentUser.nama === r.nama;
+
+  container.innerHTML += `
+    <div style="color:white; margin-bottom:1rem;">
+      ${r.nama} - ${r.judul} - ${r.komentar}
+      ${isOwner ? `[punya sendiri]` : `[orang lain]`}
+    </div>
+  `;
 });
+  }
+
+  // bikin bisa dipanggil dari onclick HTML
+  window.deleteComment = async function (id) {
+    const confirmDelete = confirm("Hapus komentar ini?");
+    if (!confirmDelete) return;
+
+    await fetch(`https://solarsystemprime-production.up.railway.app/comment/${id}`, {
+      method: "DELETE"
+    });
+
+    alert("Komentar dihapus");
+    loadReviews();
+  };
+
+  window.editComment = async function (id) {
+    const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
+    const data = await res.json();
+
+    const review = data.find((r) => Number(r.id) === Number(id));
+    if (!review) return alert("Komentar tidak ditemukan");
+
+    editingCommentId = id;
+
+    document.querySelector("#commentForm [name='judul']").value = review.judul || "";
+    document.querySelector("#commentForm [name='komentar']").value = review.komentar || "";
+
+    const ratingInput = document.querySelector(`input[name="rating"][value="${review.rating}"]`);
+    if (ratingInput) ratingInput.checked = true;
+
+    alert("Editing comment...");
+    closeModal("reviewModal");
+    openModal("commentModal");
+  };
+
+  const reviewModalBtn = document.querySelector('[data-modal-target="reviewModal"]');
+  if (reviewModalBtn) {
+    reviewModalBtn.addEventListener("click", loadReviews);
+  }
+
+  // ================= LOGOUT =================
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("user");
+      alert("Logout berhasil");
+      location.reload();
+    });
+  }
+
+  // optional: load review pertama kali kalau perlu
+  // loadReviews();
+});
+
+console.log("FORM KEKIRIM");
