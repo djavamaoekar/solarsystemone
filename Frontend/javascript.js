@@ -62,6 +62,10 @@ document.querySelectorAll('[data-modal-target]').forEach(btn => {
     }
 
     openModal(targetId);
+
+    if (targetId === "reviewModal") {
+      setTimeout(loadReviews, 300);
+    }
   });
 });
 
@@ -863,6 +867,37 @@ function animate() {
 
 animate();
 
+  // ================= REVIEW =================
+async function loadReviews() {
+  console.log("loadReviews jalan");
+
+  const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
+  const data = await res.json();
+
+  const container = document.getElementById("reviewList");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!data.length) {
+    container.innerHTML = "<p>Belum ada review</p>";
+    return;
+  }
+
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
+  [...data].reverse().forEach((r) => {
+    const isOwner = currentUser && currentUser.nama === r.nama;
+
+    container.innerHTML += `
+      <div style="color:white; margin-bottom:1rem;">
+        ${r.nama} - ${r.judul} - ${r.komentar}
+        ${isOwner ? "[punya sendiri]" : "[orang lain]"}
+      </div>
+    `;
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   // ================= USER =================
   const user = JSON.parse(localStorage.getItem("user"));
@@ -977,35 +1012,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ================= REVIEW =================
-  async function loadReviews() {
-    const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
-    const data = await res.json();
-
-    const container = document.getElementById("reviewList");
-    if (!container) return;
-    container.innerHTML = "";
-
-    if (!data.length) {
-      container.innerHTML = "<p>Belum ada review</p>";
-      return;
-    }
-
-    const currentUser = JSON.parse(localStorage.getItem("user"));
-
-    [...data].reverse().forEach((r) => {
-      console.log(r);
-  const isOwner = currentUser && currentUser.nama === r.nama;
-
-  container.innerHTML += `
-    <div style="color:white; margin-bottom:1rem;">
-      ${r.nama} - ${r.judul} - ${r.komentar}
-      ${isOwner ? `[punya sendiri]` : `[orang lain]`}
-    </div>
-  `;
-});
-  }
-
   // bikin bisa dipanggil dari onclick HTML
   window.deleteComment = async function (id) {
     const confirmDelete = confirm("Hapus komentar ini?");
@@ -1039,11 +1045,6 @@ window.addEventListener("DOMContentLoaded", () => {
     openModal("commentModal");
   };
 
-  const reviewModalBtn = document.querySelector('[data-modal-target="reviewModal"]');
-  if (reviewModalBtn) {
-    reviewModalBtn.addEventListener("click", loadReviews);
-  }
-
   // ================= LOGOUT =================
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
@@ -1054,8 +1055,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // optional: load review pertama kali kalau perlu
-  // loadReviews();
+    
 });
 
 console.log("FORM KEKIRIM");
