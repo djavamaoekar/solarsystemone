@@ -31,7 +31,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // full screen
 renderer.setSize(window.innerWidth, window.innerHeight);
-
+renderer.domElement.style.pointerEvents = "none";
 // orbit controls & grid
 
 // Fungsi membuka modal
@@ -56,8 +56,15 @@ document.querySelectorAll('[data-modal-target]').forEach(btn => {
     const targetId = btn.getAttribute('data-modal-target');
     const user = JSON.parse(localStorage.getItem("user"));
 
+    // Harus login dulu buat komentar / review
     if ((targetId === "commentModal" || targetId === "reviewModal") && !user) {
       alert("Daftar / login dulu bro");
+      return;
+    }
+
+    // Kalau sudah login, blok login/signup
+    if ((targetId === "loginModal" || targetId === "signupModal") && user) {
+      alert("Logout dulu untuk ganti user");
       return;
     }
 
@@ -902,10 +909,11 @@ window.addEventListener("DOMContentLoaded", () => {
   // ================= USER =================
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (user && document.getElementById("profileNama")) {
-    document.getElementById("profileNama").textContent = user.nama;
-    console.log("User login:", user.nama);
-  }
+if (user && document.getElementById("profileNama")) {
+  document.getElementById("profileNama").textContent = user.nama;
+} else {
+  document.getElementById("profileNama").textContent = "Guest";
+}
 
   // ================= SIGNUP =================
   const signupForm = document.getElementById("signupForm");
@@ -1046,16 +1054,27 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   // ================= LOGOUT =================
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("user");
-      alert("Logout berhasil");
-      location.reload();
-    });
-  }
+// ================= LOGOUT =================
+const btn = document.getElementById("logoutBtn");
 
-    
+if (btn) {
+  btn.onclick = () => {
+    console.log("1. klik");
+
+    const overlay = document.querySelector(".planet-overlay");
+    if (overlay) overlay.hidden = true;
+
+    localStorage.removeItem("user");
+    console.log("2. user =", localStorage.getItem("user"));
+
+    alert("Logout berhasil");
+
+    window.location.reload();
+
+    console.log("3. habis reload");
+  };
+}
+
 });
 
 console.log("FORM KEKIRIM");

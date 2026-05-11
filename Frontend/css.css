@@ -70,12 +70,9 @@ body.modal-open {
   height: 100%;
   display: block;
   cursor: crosshair;
-}
-
-#canvas {
   position: fixed;
   inset: 0;
-  z-index: 0; /* penting */
+  z-index: 0;
 }
 
 /* ---------- Menu base ---------- */
@@ -311,13 +308,14 @@ body.modal-open {
   background: rgba(2, 6, 18, 0.56);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 100; /* di depan semua */
+  z-index: 100;
+  pointer-events: auto;
 }
-.planet-overlay[hidden] {
-  display: none;
-}
-/* ... pastikan tidak ada definisi .planet-overlay lain di CSS ... */
 
+.planet-overlay[hidden] {
+  display: none !important;
+  pointer-events: none !important;
+}
 
 .planet-panel {
   position: relative;
@@ -465,20 +463,21 @@ body.planet-lock {
   background: rgba(0,0,0,0.4);
   backdrop-filter: blur(10px);
   z-index: 9999;
+
+  pointer-events: none;
 }
 
 .modal.active {
   display: flex;
-
-  /* INI KUNCI NYA */
-  display: flex;
-  justify-content: center;  /* tengah horizontal */
-  align-items: center;      /* tengah vertical */
+  justify-content: center;
+  align-items: center;
 
   background: rgba(0,0,0,0.4);
   backdrop-filter: blur(10px);
 
   z-index: 9999;
+
+  pointer-events: auto;
 }
 
 /* Box modal */
@@ -681,31 +680,32 @@ body {
   gap: 6px;
   margin-top: 14px;
   padding: 9px;
-  min-width: 110px;
-  position: absolute;
-  top: 45px;
-  right: 0;
+  min-width: 140px;
+
+  position: fixed;
+  top: 65px;
+  right: 20px;
+
+  z-index: 100000;
+
+  pointer-events: auto; /* WAJIB */
+
   background: rgba(255,255,255,0.08);
   backdrop-filter: blur(18px);
   border: 2px solid rgba(255,255,255,0.25);
   border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
 }
 
 .auth-dropdown.show {
   display: flex;
 }
-    
+
 .auth-dropdown button {
-  padding: 7px;
-  border: none;
-  border-radius: 15px;
-  background: rgba(255,255,255,0.07);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s;
-  font-size: 12px;
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .auth-dropdown button:hover {
