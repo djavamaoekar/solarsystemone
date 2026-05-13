@@ -19,6 +19,8 @@ if (authToggle && authDropdown) {
 // scene, camera
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 
 // renderer
 const renderer = new THREE.WebGLRenderer({
@@ -790,6 +792,54 @@ uranusAnker.add(uranus);
 
 neptuneAnker.add(neptune);
 
+const interactivePlanets = [
+  {
+    mesh: mercury,
+    orbit: mercuryTorusMaterial,
+    name: "mercury"
+  },
+  {
+    mesh: venus,
+    orbit: venusTorusMaterial,
+    name: "venus"
+  },
+  {
+    mesh: earth,
+    orbit: earthTorusMaterial,
+    name: "earth"
+  },
+  {
+    mesh: moon,
+    orbit: moonTorusMaterial,
+    name: "moon"
+  },
+  {
+    mesh: mars,
+    orbit: marsTorusMaterial,
+    name: "mars"
+  },
+  {
+    mesh: jupiter,
+    orbit: jupiterTorusMaterial,
+    name: "jupiter"
+  },
+  {
+    mesh: saturn,
+    orbit: saturnTorusMaterial,
+    name: "saturn"
+  },
+  {
+    mesh: uranus,
+    orbit: uranusTorusMaterial,
+    name: "uranus"
+  },
+  {
+    mesh: neptune,
+    orbit: neptuneTorusMaterial,
+    name: "neptune"
+  }
+];
+
 scene.add(
   // sun & lighting
   sun,
@@ -846,9 +896,38 @@ for (const planet of ['mercury', 'venus', 'earth', 'moon', 'mars', 'jupiter', 's
 
 let orbitalSpeed = 8000;
 
+window.addEventListener("mousemove", (event) => {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
+
+    // 🔥 HOVER DETECTION
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(
+    interactivePlanets.map(p => p.mesh)
+  );
+
+  // reset semua orbit
+  interactivePlanets.forEach(p => {
+    p.orbit.color.setHex(0xffffff);
+  });
+
+  // kalau hover planet
+  if (intersects.length > 0) {
+    const hoveredPlanet = interactivePlanets.find(
+      p => p.mesh === intersects[0].object
+    );
+
+    if (hoveredPlanet) {
+      hoveredPlanet.orbit.color.setHex(0x99ff00);
+    }
+  }
+
   renderer.render(scene, camera);
   const checkbox = document.querySelector('[data-animate]');
   if (!checkbox.checked) return;
@@ -873,6 +952,24 @@ function animate() {
 }
 
 animate();
+
+window.addEventListener("click", () => {
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(
+    interactivePlanets.map(p => p.mesh)
+  );
+
+  if (intersects.length > 0) {
+    const clickedPlanet = interactivePlanets.find(
+      p => p.mesh === intersects[0].object
+    );
+
+    if (clickedPlanet) {
+      openPlanetPanel(clickedPlanet.name);
+    }
+  }
+});
 
   // ================= REVIEW =================
 async function loadReviews() {
