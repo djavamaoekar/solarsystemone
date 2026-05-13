@@ -31,7 +31,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // full screen
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.domElement.style.pointerEvents = "none";
+renderer.domElement.style.pointerEvents = "auto";
 // orbit controls & grid
 
 // Fungsi membuka modal
