@@ -10,6 +10,32 @@ window.addEventListener("resize", () => {
 const authToggle = document.getElementById("authToggle");
 const authDropdown = document.getElementById("authDropdown");
 
+function updateAuthUI() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const signupBtn = document.getElementById("signupBtn");
+  const loginBtn = document.getElementById("loginBtn");
+  const commentBtn = document.getElementById("commentBtn");
+  const reviewBtn = document.getElementById("reviewBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (user) {
+    signupBtn.style.display = "none";
+    loginBtn.style.display = "none";
+
+    commentBtn.style.display = "block";
+    reviewBtn.style.display = "block";
+    logoutBtn.style.display = "block";
+  } else {
+    signupBtn.style.display = "block";
+    loginBtn.style.display = "block";
+
+    commentBtn.style.display = "none";
+    reviewBtn.style.display = "none";
+    logoutBtn.style.display = "none";
+  }
+}
+
 if (authToggle && authDropdown) {
   authToggle.addEventListener("click", () => {
     authDropdown.classList.toggle("show");
@@ -1003,6 +1029,7 @@ async function loadReviews() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  updateAuthUI();
   // ================= USER =================
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -1063,6 +1090,7 @@ if (user && document.getElementById("profileNama")) {
 
       if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
+        updateAuthUI();
         alert("Login berhasil");
         location.reload();
       } else {
@@ -1162,6 +1190,7 @@ if (btn) {
     if (overlay) overlay.hidden = true;
 
     localStorage.removeItem("user");
+    updateAuthUI();
     console.log("2. user =", localStorage.getItem("user"));
 
     alert("Logout berhasil");
