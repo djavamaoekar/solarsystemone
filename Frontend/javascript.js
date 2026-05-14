@@ -1014,18 +1014,91 @@ async function loadReviews() {
     return;
   }
 
-  const currentUser = JSON.parse(localStorage.getItem("user"));
+const currentUser = JSON.parse(localStorage.getItem("user"));
 
-  [...data].reverse().forEach((r) => {
-    const isOwner = currentUser && currentUser.nama === r.nama;
+const userCommentCount = {};
 
-    container.innerHTML += `
-      <div style="color:white; margin-bottom:1rem;">
-        ${r.nama} - ${r.judul} - ${r.komentar}
-        ${isOwner ? "[punya sendiri]" : "[orang lain]"}
+[...data].reverse().forEach((r) => {
+
+  const isOwner =
+    currentUser &&
+    currentUser.nama === r.nama;
+    console.log(r);
+  
+  const shortId = `ID${String(r.id).padStart(5, "0")}`;
+
+  const date = new Date(r.created_at || Date.now());
+
+  const formattedDate =
+    `${String(date.getMonth() + 1).padStart(2, "0")}/` +
+    `${String(date.getDate()).padStart(2, "0")} - ` +
+    `${String(date.getHours()).padStart(2, "0")}:` +
+    `${String(date.getMinutes()).padStart(2, "0")}`;
+
+  // TARO SINI
+  const commentId = String(r.id).slice(-5);
+
+  const now = new Date();
+
+  const commentDate =
+    String(now.getMonth() + 1).padStart(2, "0") +
+    "/" +
+    String(now.getDate()).padStart(2, "0") +
+    " - " +
+    String(now.getHours()).padStart(2, "0") +
+    ":" +
+    String(now.getMinutes()).padStart(2, "0");
+
+  container.innerHTML += `
+    <div style="
+      color:white;
+      margin-bottom:1rem;
+      padding:10px;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px;
+    ">
+
+      <div style="
+        font-size:12px;
+        opacity:0.7;
+        margin-bottom:6px;
+      ">
+        ${r.nama} • ${shortId} • ${formattedDate}
       </div>
-    `;
-  });
+
+      <div style="
+        margin-top:6px;
+        font-size:1.1rem;
+      ">
+        ${"⭐".repeat(r.rating || 0)}
+      </div>
+
+      <div style="
+        margin-top:6px;
+        font-weight:bold;
+      ">
+        ${r.judul}
+      </div>
+
+      <div style="
+        margin-top:4px;
+        margin-bottom:10px;
+      ">
+        ${r.komentar}
+      </div>
+
+      ${
+        isOwner
+          ? `
+            <button onclick="editComment(${r.id})">Edit</button>
+            <button onclick="deleteComment(${r.id})">Delete</button>
+          `
+          : `<span style="opacity:0.7;"></span>`
+      }
+
+    </div>
+  `;
+});
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -1121,6 +1194,10 @@ if (user && document.getElementById("profileNama")) {
         : "https://solarsystemprime-production.up.railway.app/comment";
 
       const method = editingCommentId ? "PUT" : "POST";
+
+      console.log("MODE =", method);
+      console.log("URL =", url);
+      console.log("editingCommentId =", editingCommentId);
 
       const res = await fetch(url, {
         method,
