@@ -1001,7 +1001,7 @@ window.addEventListener("click", () => {
 async function loadReviews() {
   console.log("loadReviews jalan");
 
-  const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
+  const res = await fetch("https://solarsystemone-production.up.railway.app/reviews");
   const data = await res.json();
 
   const container = document.getElementById("reviewList");
@@ -1120,7 +1120,7 @@ if (user && document.getElementById("profileNama")) {
 
       const formData = new FormData(e.target);
 
-      const res = await fetch("https://solarsystemprime-production.up.railway.app/signup", {
+      const res = await fetch("https://solarsystemone-production.up.railway.app/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -1147,7 +1147,7 @@ if (user && document.getElementById("profileNama")) {
 
       const formData = new FormData(e.target);
 
-      const res = await fetch("https://solarsystemprime-production.up.railway.app/login", {
+      const res = await fetch("https://solarsystemone-production.up.railway.app/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -1190,8 +1190,8 @@ if (user && document.getElementById("profileNama")) {
       if (!rating) return alert("Pilih rating dulu!");
 
       const url = editingCommentId
-        ? `https://solarsystemprime-production.up.railway.app/comment/${editingCommentId}`
-        : "https://solarsystemprime-production.up.railway.app/comment";
+        ? `https://solarsystemone-production.up.railway.app/comment/${editingCommentId}`
+        : "https://solarsystemone-production.up.railway.app/comment";
 
       const method = editingCommentId ? "PUT" : "POST";
 
@@ -1227,7 +1227,7 @@ if (user && document.getElementById("profileNama")) {
     const confirmDelete = confirm("Hapus komentar ini?");
     if (!confirmDelete) return;
 
-    await fetch(`https://solarsystemprime-production.up.railway.app/comment/${id}`, {
+    await fetch(`https://solarsystemone-production.up.railway.app/comment/${id}`, {
       method: "DELETE"
     });
 
@@ -1236,7 +1236,7 @@ if (user && document.getElementById("profileNama")) {
   };
 
   window.editComment = async function (id) {
-    const res = await fetch("https://solarsystemprime-production.up.railway.app/reviews");
+    const res = await fetch("https://solarsystemone-production.up.railway.app/reviews");
     const data = await res.json();
 
     const review = data.find((r) => Number(r.id) === Number(id));
